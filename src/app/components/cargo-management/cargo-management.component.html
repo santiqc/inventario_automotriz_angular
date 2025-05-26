@@ -1,0 +1,116 @@
+<div class="cargo-container">
+  <div class="cargo-header">
+    <h2>Gestión de Cargos</h2>
+    <button class="btn btn-outline" routerLink="/usuarios">
+      ← Volver a usuarios
+    </button>
+  </div>
+
+
+  <div class="form-card">
+    <h3>Crear Nuevo Cargo</h3>
+    <form [formGroup]="cargoForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre del Cargo *</label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="form-control"
+            [class.error]="isFieldInvalid('nombre')"
+            placeholder="Ej: Asesor de ventas, Administrador, Soporte..."
+            maxlength="50"
+          />
+          <div class="error-message" *ngIf="isFieldInvalid('nombre')">
+            <span *ngIf="cargoForm.get('nombre')?.errors?.['required']">
+              El nombre del cargo es requerido
+            </span>
+            <span *ngIf="cargoForm.get('nombre')?.errors?.['minlength']">
+              El nombre debe tener al menos 2 caracteres
+            </span>
+            <span *ngIf="cargoForm.get('nombre')?.errors?.['maxlength']">
+              El nombre no puede tener más de 50 caracteres
+            </span>
+          </div>
+        </div>
+        <div class="form-actions-inline">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="cargoForm.invalid || guardando"
+          >
+            <span *ngIf="guardando">Creando...</span>
+            <span *ngIf="!guardando">+ Crear Cargo</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <div class="table-card">
+    <div class="table-header">
+      <h3>Cargos Registrados</h3>
+      <span class="count-badge">{{ cargos.length }} cargo(s)</span>
+    </div>
+
+    <div *ngIf="cargando" class="loading">Cargando cargos...</div>
+
+    <div *ngIf="!cargando && cargos.length === 0" class="no-data">
+      <p>No hay cargos registrados</p>
+      <p class="help-text">Cree el primer cargo usando el formulario superior</p>
+    </div>
+
+    <div *ngIf="!cargando && cargos.length > 0" class="cargos-grid">
+      <div *ngFor="let cargo of cargos" class="cargo-card">
+        <div class="cargo-info">
+          <h4>{{ cargo.nombre }}</h4>
+          <span class="cargo-id">ID: {{ cargo.id }}</span>
+        </div>
+        <div class="cargo-actions">
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="confirmarEliminar(cargo)"
+            title="Eliminar cargo"
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div
+  class="modal-overlay"
+  *ngIf="cargoAEliminar"
+  (click)="cancelarEliminar()"
+>
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Confirmar Eliminación</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        ¿Está seguro que desea eliminar el cargo
+        <strong>{{ cargoAEliminar.nombre }}</strong>?
+      </p>
+      <div class="warning-message">
+        <p>
+          <strong>Advertencia:</strong> Esta acción no se puede deshacer. 
+          Si hay usuarios asignados a este cargo, no podrá ser eliminado.
+        </p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="cancelarEliminar()">
+        Cancelar
+      </button>
+      <button class="btn btn-danger" (click)="eliminarCargo()">
+        Eliminar Cargo
+      </button>
+    </div>
+  </div>
+</div>

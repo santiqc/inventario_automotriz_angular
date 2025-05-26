@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MercanciaDto, MercanciaRequest } from '../models/mercancia.model';
 import { Observable } from 'rxjs';
-import { Cargo, Usuario, UsuarioRequest } from '../models/usuario.model';
+import { Cargo, CargoDto, Usuario, UsuarioRequest } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class MercanciaService {
 
   constructor(private http: HttpClient) { }
 
-    registrarMercancia(mercancia: MercanciaRequest): Observable<MercanciaDto> {
+  registrarMercancia(mercancia: MercanciaRequest): Observable<MercanciaDto> {
     return this.http.post<MercanciaDto>(`${this.apiUrl}/mercancias`, mercancia);
   }
 
@@ -27,9 +27,9 @@ export class MercanciaService {
     return this.http.delete<void>(`${this.apiUrl}/mercancias/${id}`, { params });
   }
 
-  buscarMercancias(nombre?: string, usuarioId?: number, fecha?: string, mercanciaId?:number): Observable<MercanciaDto[]> {
+  buscarMercancias(nombre?: string, usuarioId?: number, fecha?: string, mercanciaId?: number): Observable<MercanciaDto[]> {
     let params = new HttpParams();
-    
+
     if (nombre && nombre.trim()) {
       params = params.set('nombre', nombre.trim());
     }
@@ -70,5 +70,13 @@ export class MercanciaService {
 
   obtenerCargos(): Observable<Cargo[]> {
     return this.http.get<Cargo[]>(`${this.apiUrl}/usuarios/cargos`);
+  }
+
+  crearCargo(cargo: CargoDto): Observable<Cargo> {
+    return this.http.post<Cargo>(`${this.apiUrl}/usuarios/cargos/crear`, cargo);
+  }
+
+  eliminarCargo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/usuarios/cargos/${id}`);
   }
 }

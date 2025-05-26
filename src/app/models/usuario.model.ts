@@ -18,3 +18,6 @@ export  interface Cargo {
   nombre: string;
   id: number;
 }
+export interface CargoDto {
+  nombre: string;
+}

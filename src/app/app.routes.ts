@@ -3,6 +3,7 @@ import { MercanciaListComponent } from './components/mercancia-list/mercancia-li
 import { MercanciaFormComponent } from './components/mercancia-form/mercancia-form.component';
 import { UsuarioListComponent } from './components/usuario-list/usuario-list.component';
 import { UsuarioFormComponent } from './components/usuario-form/usuario-form.component';
+import { CargoManagementComponent } from './components/cargo-management/cargo-management.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/mercancias', pathMatch: 'full' },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'usuarios', component: UsuarioListComponent },
   { path: 'usuarios/nuevo', component: UsuarioFormComponent },
   { path: 'usuarios/editar/:id', component: UsuarioFormComponent },
+  { path: 'cargos', component: CargoManagementComponent },
   { path: '**', redirectTo: '/mercancias' }
 ];

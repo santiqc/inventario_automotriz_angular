@@ -72,8 +72,8 @@
               {{ cargo.nombre }}
             </option>
           </select>
-          <div class="error-message" *ngIf="isFieldInvalid('cargo')">
-            <span *ngIf="usuarioForm.get('cargo')?.errors?.['required']">
+          <div class="error-message" *ngIf="isFieldInvalid('cargoId')">
+            <span *ngIf="usuarioForm.get('cargoId')?.errors?.['required']">
               Debe seleccionar un cargo
             </span>
           </div>
@@ -100,7 +100,6 @@
         </div>
       </div>
 
-      
       <div class="info-card" *ngIf="esEdicion && usuarioOriginal">
         <h4>Información Original</h4>
         <div class="info-row">
