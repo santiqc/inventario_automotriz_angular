@@ -46,13 +46,13 @@ export class MercanciaListComponent implements OnInit {
         this.usuarios = usuarios;
       },
       error: (error) => {
-        console.error('Error al cargar usuarios:', error);
+        this.toastr.error('Error al cargar usuarios:');
       }
     });
   }
 
   buscarMercancias() {
-    
+
     // if (!this.filtros.nombre.trim() && !this.filtros.usuarioId && !this.filtros.fecha) {
     //   this.toastr.warning('Debe especificar al menos un filtro de búsqueda');
     //   return;
@@ -73,7 +73,7 @@ export class MercanciaListComponent implements OnInit {
       },
       error: (error) => {
         this.cargando = false;
-        console.error('Error al buscar mercancías:', error);
+        this.toastr.error('Error al buscar mercancías:');
       }
     });
   }
@@ -109,7 +109,8 @@ export class MercanciaListComponent implements OnInit {
         this.buscarMercancias();
       },
       error: (error) => {
-        console.error('Error al eliminar mercancía:', error);
+        ;
+        this.toastr.error(error.error.error || 'Error desconocido', 'Error al eliminar mercancía:');
       }
     });
   }

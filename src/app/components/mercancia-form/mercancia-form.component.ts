@@ -34,7 +34,7 @@ export class MercanciaFormComponent implements OnInit {
   ) {
 
     this.fechaMaxima = new Date().toISOString().split('T')[0];
-    
+
     this.mercanciaForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       cantidad: [0, [Validators.required, Validators.min(0)]],
@@ -50,11 +50,11 @@ export class MercanciaFormComponent implements OnInit {
 
   fechaMaximaValidator(control: any) {
     if (!control.value) return null;
-    
+
     const fechaIngresada = new Date(control.value);
     const fechaActual = new Date();
-    fechaActual.setHours(23, 59, 59, 999); 
-    
+    fechaActual.setHours(23, 59, 59, 999);
+
     return fechaIngresada > fechaActual ? { max: true } : null;
   }
 
@@ -64,7 +64,6 @@ export class MercanciaFormComponent implements OnInit {
         this.usuarios = usuarios;
       },
       error: (error) => {
-        console.error('Error al cargar usuarios:', error);
         this.toastr.error('Error al cargar la lista de usuarios');
       }
     });
@@ -94,7 +93,6 @@ export class MercanciaFormComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error al cargar mercancía:', error);
         this.toastr.error('Error al cargar los datos de la mercancía');
         this.router.navigate(['/mercancias']);
       }
@@ -138,7 +136,7 @@ export class MercanciaFormComponent implements OnInit {
       },
       error: (error) => {
         this.guardando = false;
-        console.error('Error al crear mercancía:', error);
+        this.toastr.error(error.error.error || 'Error desconocido', 'Error al crear mercancía:');
       }
     });
   }
@@ -147,8 +145,8 @@ export class MercanciaFormComponent implements OnInit {
     if (!this.mercanciaId || !this.usuarioModificadorId) return;
 
     this.mercanciaService.editarMercancia(
-      this.mercanciaId, 
-      mercanciaData, 
+      this.mercanciaId,
+      mercanciaData,
       this.usuarioModificadorId
     ).subscribe({
       next: (response) => {
@@ -157,7 +155,7 @@ export class MercanciaFormComponent implements OnInit {
       },
       error: (error) => {
         this.guardando = false;
-        console.error('Error al actualizar mercancía:', error);
+         this.toastr.error(error.error.error || 'Error desconocido', 'Error al actualizar mercancía:');
       }
     });
   }

@@ -49,7 +49,6 @@ export class UsuarioListComponent implements OnInit {
       },
       error: (error) => {
         this.cargando = false;
-        console.error('Error al cargar usuarios:', error);
         this.toastr.error('Error al cargar la lista de usuarios');
       }
     });
@@ -61,7 +60,7 @@ export class UsuarioListComponent implements OnInit {
         this.cargos = cargos;
       },
       error: (error) => {
-        console.error('Error al cargar cargos:', error);
+        this.toastr.error(error.error.error || 'Error desconocido', 'Error al cargar cargos:');
       }
     });
   }
@@ -118,7 +117,6 @@ export class UsuarioListComponent implements OnInit {
         this.cargarUsuarios();
       },
       error: (error) => {
-        console.error('Error al eliminar usuario:', error);
         this.toastr.error('Error al eliminar el usuario. Puede que tenga mercancías asociadas.');
       }
     });

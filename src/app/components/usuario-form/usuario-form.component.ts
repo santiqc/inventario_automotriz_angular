@@ -62,7 +62,6 @@ export class UsuarioFormComponent implements OnInit {
         this.cargos = cargos;
       },
       error: (error) => {
-        console.error('Error al cargar cargos:', error);
         this.toastr.error('Error al cargar la lista de cargos');
       }
     });
@@ -91,7 +90,6 @@ export class UsuarioFormComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error al cargar usuario:', error);
         this.toastr.error('Error al cargar los datos del usuario');
         this.router.navigate(['/usuarios']);
       }
@@ -130,7 +128,6 @@ export class UsuarioFormComponent implements OnInit {
       },
       error: (error) => {
         this.guardando = false;
-        console.error('Error al crear usuario:', error);
         this.toastr.error('Error al crear el usuario');
       }
     });
@@ -146,7 +143,6 @@ export class UsuarioFormComponent implements OnInit {
       },
       error: (error) => {
         this.guardando = false;
-        console.error('Error al actualizar usuario:', error);
         this.toastr.error('Error al actualizar el usuario');
       }
     });
