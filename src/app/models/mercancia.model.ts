@@ -6,8 +6,8 @@ export interface MercanciaDto {
   cantidad: number;
   fechaIngreso: string;
   usuarioId: number;
-  usuarioRegistro?: Usuario;
-  usuarioModificacion?: Usuario;
+  usuarioRegistro?: string;
+  usuarioModificacion?: string;
   fechaModificacion?: string;
 }
 
