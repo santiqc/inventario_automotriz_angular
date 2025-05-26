@@ -1,0 +1,164 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ esEdicion ? "Editar" : "Nueva" }} Mercancía</h2>
+    <button class="btn btn-outline" routerLink="/mercancias">
+      ← Volver a la lista
+    </button>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="mercanciaForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre del Producto *</label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            class="form-control"
+            [class.error]="isFieldInvalid('nombre')"
+            placeholder="Ingrese el nombre del producto"
+          />
+          <div class="error-message" *ngIf="isFieldInvalid('nombre')">
+            <span *ngIf="mercanciaForm.get('nombre')?.errors?.['required']">
+              El nombre es requerido
+            </span>
+            <span *ngIf="mercanciaForm.get('nombre')?.errors?.['minlength']">
+              El nombre debe tener al menos 2 caracteres
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidad">Cantidad *</label>
+          <input
+            type="number"
+            id="cantidad"
+            formControlName="cantidad"
+            class="form-control"
+            [class.error]="isFieldInvalid('cantidad')"
+            placeholder="Ingrese la cantidad"
+            min="0"
+          />
+          <div class="error-message" *ngIf="isFieldInvalid('cantidad')">
+            <span *ngIf="mercanciaForm.get('cantidad')?.errors?.['required']">
+              La cantidad es requerida
+            </span>
+            <span *ngIf="mercanciaForm.get('cantidad')?.errors?.['min']">
+              La cantidad debe ser mayor o igual a 0
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaIngreso">Fecha de Ingreso *</label>
+          <input
+            type="date"
+            id="fechaIngreso"
+            formControlName="fechaIngreso"
+            class="form-control"
+            [class.error]="isFieldInvalid('fechaIngreso')"
+            [max]="fechaMaxima"
+          />
+          <div class="error-message" *ngIf="isFieldInvalid('fechaIngreso')">
+            <span
+              *ngIf="mercanciaForm.get('fechaIngreso')?.errors?.['required']"
+            >
+              La fecha de ingreso es requerida
+            </span>
+            <span *ngIf="mercanciaForm.get('fechaIngreso')?.errors?.['max']">
+              La fecha no puede ser futura
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="usuarioId"
+            >Usuario {{ esEdicion ? "Registrador" : "que Registra" }} *</label
+          >
+          <select
+            id="usuarioId"
+            formControlName="usuarioId"
+            class="form-control"
+            [class.error]="isFieldInvalid('usuarioId')"
+            [disabled]="esEdicion"
+          >
+            <option value="">Seleccione un usuario</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+              {{ usuario.nombre }} - {{ usuario.cargo }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('usuarioId')">
+            <span *ngIf="mercanciaForm.get('usuarioId')?.errors?.['required']">
+              Debe seleccionar un usuario
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="esEdicion">
+        <div class="form-group">
+          <label for="usuarioModificadorId">Usuario que Modifica *</label>
+          <select
+            id="usuarioModificadorId"
+            [(ngModel)]="usuarioModificadorId"
+            [ngModelOptions]="{ standalone: true }"
+            class="form-control"
+            required
+          >
+            <option value="">Seleccione un usuario</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+              {{ usuario.nombre }} - {{ usuario.cargo }}
+            </option>
+          </select>
+          <div
+            class="error-message"
+            *ngIf="esEdicion && !usuarioModificadorId && intentoEnvio"
+          >
+            Debe seleccionar el usuario que modifica
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="info-card"
+        *ngIf="esEdicion && mercanciaOriginal?.fechaModificacion"
+      >
+        <h4>Última Modificación</h4>
+        <p>
+          <strong>Fecha:</strong>
+          {{ mercanciaOriginal?.fechaModificacion | date : "dd/MM/yyyy HH:mm" }}
+        </p>
+        <p>
+          <strong>Usuario:</strong> {{ mercanciaOriginal?.usuarioModificacion }}
+        </p>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          routerLink="/mercancias"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="
+            mercanciaForm.invalid ||
+            guardando ||
+            (esEdicion && !usuarioModificadorId)
+          "
+        >
+          <span *ngIf="guardando">Guardando...</span>
+          <span *ngIf="!guardando"
+            >{{ esEdicion ? "Actualizar" : "Crear" }} Mercancía</span
+          >
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

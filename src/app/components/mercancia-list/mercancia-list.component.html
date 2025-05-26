@@ -1,0 +1,167 @@
+<div class="mercancia-list-container">
+  <div class="header">
+    <h2>Lista de Mercancías</h2>
+    <button class="btn btn-primary" routerLink="/mercancias/nueva">
+      + Nueva Mercancía
+    </button>
+  </div>
+
+  <div class="search-filters">
+    <h3>Filtros de Búsqueda</h3>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="nombreFilter">Nombre:</label>
+        <input
+          type="text"
+          id="nombreFilter"
+          [(ngModel)]="filtros.nombre"
+          placeholder="Buscar por nombre..."
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="usuarioFilter">Usuario:</label>
+        <select
+          id="usuarioFilter"
+          [(ngModel)]="filtros.usuarioId"
+          class="form-control"
+        >
+          <option value="">Todos los usuarios</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+            {{ usuario.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="fechaFilter">Fecha:</label>
+        <input
+          type="date"
+          id="fechaFilter"
+          [(ngModel)]="filtros.fecha"
+          class="form-control"
+        />
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn btn-secondary" (click)="buscarMercancias()">
+          Buscar
+        </button>
+        <button class="btn btn-outline" (click)="limpiarFiltros()">
+          Limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="table-container" *ngIf="mercancias.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Cantidad</th>
+          <th>Fecha Ingreso</th>
+          <th>Usuario Registro</th>
+          <th>Última Modificación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let mercancia of mercancias">
+          <td>{{ mercancia.id }}</td>
+          <td>{{ mercancia.nombre }}</td>
+          <td>{{ mercancia.cantidad }}</td>
+          <td>{{ mercancia.fechaIngreso | date : "dd/MM/yyyy" }}</td>
+          <td>{{ mercancia.usuarioRegistro }}</td>
+          <td>
+            <div
+              *ngIf="
+                mercancia.fechaModificacion &&
+                mercancia.fechaModificacion !== '-'
+              "
+            >
+              {{ mercancia.fechaModificacion | date : "dd/MM/yyyy" }}
+              <br />
+              <small>por {{ mercancia.usuarioModificacion }}</small>
+            </div>
+            <span *ngIf="!mercancia.fechaModificacion">-</span>
+          </td>
+          <td class="actions">
+            <button
+              class="btn btn-sm btn-primary"
+              [routerLink]="['/mercancias/editar', mercancia.id]"
+            >
+              Editar
+            </button>
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="confirmarEliminar(mercancia)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="no-data" *ngIf="mercancias.length === 0 && !cargando">
+    <p>
+      No se encontraron mercancías. Use los filtros para buscar o cree una
+      nueva.
+    </p>
+  </div>
+
+
+  <div class="loading" *ngIf="cargando">
+    <p>Cargando...</p>
+  </div>
+</div>
+
+
+<div
+  class="modal-overlay"
+  *ngIf="mercanciaAEliminar"
+  (click)="cancelarEliminar()"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>Confirmar Eliminación</h3>
+    <p>
+      ¿Está seguro de eliminar la mercancía "{{ mercanciaAEliminar.nombre }}"?
+    </p>
+    <p class="warning">
+      Solo el usuario que registró la mercancía puede eliminarla.
+    </p>
+
+    <div class="form-group">
+      <label for="usuarioEliminar">Seleccione su usuario:</label>
+      <select
+        id="usuarioEliminar"
+        [(ngModel)]="usuarioEliminarId"
+        class="form-control"
+      >
+        <option value="">Seleccione un usuario</option>
+        <option *ngFor="let usuario of usuarios" [value]="usuario.id">
+          {{ usuario.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="cancelarEliminar()">
+        Cancelar
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="eliminarMercancia()"
+        [disabled]="!usuarioEliminarId"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
